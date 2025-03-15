@@ -10,17 +10,21 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
             height: 100vh;
             margin: 0;
+            background-color: #f0f0f0;
         }
         .container {
             text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         table {
             border-collapse: collapse;
             margin-bottom: 20px;
-            margin-left: auto;
-            margin-right: auto;
         }
         table, th, td {
             border: 1px solid black;
@@ -32,6 +36,15 @@
         .matrix-input {
             width: 60px;
         }
+        .footer {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+        .highlight {
+            color: #e74c3c;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -40,76 +53,66 @@
         <h2>矩陣 A</h2>
         <table id="matrixA">
             <tr>
-                <td><input type="text" class="matrix-input" id="a00" value="1"></td>
-                <td><input type="text" class="matrix-input" id="a01" value="2"></td>
+                <td><input type="number" class="matrix-input" id="a00" value="1"></td>
+                <td><input type="number" class="matrix-input" id="a01" value="2"></td>
             </tr>
             <tr>
-                <td><input type="text" class="matrix-input" id="a10" value="3"></td>
-                <td><input type="text" class="matrix-input" id="a11" value="4"></td>
+                <td><input type="number" class="matrix-input" id="a10" value="3"></td>
+                <td><input type="number" class="matrix-input" id="a11" value="4"></td>
             </tr>
         </table>
         <h2>矩陣 B</h2>
         <table id="matrixB">
             <tr>
-                <td><input type="text" class="matrix-input" id="b00" value="5"></td>
-                <td><input type="text" class="matrix-input" id="b01" value="6"></td>
+                <td><input type="number" class="matrix-input" id="b00" value="5"></td>
+                <td><input type="number" class="matrix-input" id="b01" value="6"></td>
             </tr>
             <tr>
-                <td><input type="text" class="matrix-input" id="b10" value="7"></td>
-                <td><input type="text" class="matrix-input" id="b11" value="8"></td>
+                <td><input type="number" class="matrix-input" id="b10" value="7"></td>
+                <td><input type="number" class="matrix-input" id="b11" value="8"></td>
             </tr>
         </table>
         <button onclick="multiplyMatrices()">計算矩陣乘法</button>
         <h2>結果</h2>
-        <table id="resultMatrix"></table>
+        <table id="resultMatrix">
+            <tr>
+                <td id="result00"></td>
+                <td id="result01"></td>
+            </tr>
+            <tr>
+                <td id="result10"></td>
+                <td id="result11"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="footer">
+        廖梓翔的優點：<span class="highlight">帥氣</span>、<span class="highlight">聰明</span>
     </div>
 
     <script>
-        function parseMatrixInput(matrixId) {
-            const matrix = [];
-            for (let i = 0; i < 2; i++) {
-                const row = [];
-                for (let j = 0; j < 2; j++) {
-                    const inputId = `${matrixId}${i}${j}`;
-                    const value = document.getElementById(inputId).value;
-                    row.push(value);
-                }
-                matrix.push(row);
-            }
-            return matrix;
-        }
-
         function multiplyMatrices() {
             // Get values from input fields
-            const matrixA = parseMatrixInput('a');
-            const matrixB = parseMatrixInput('b');
+            const a00 = parseFloat(document.getElementById('a00').value);
+            const a01 = parseFloat(document.getElementById('a01').value);
+            const a10 = parseFloat(document.getElementById('a10').value);
+            const a11 = parseFloat(document.getElementById('a11').value);
 
-            // Initialize the result matrix with empty strings
-            const result = Array(2).fill('').map(() => Array(2).fill(''));
+            const b00 = parseFloat(document.getElementById('b00').value);
+            const b01 = parseFloat(document.getElementById('b01').value);
+            const b10 = parseFloat(document.getElementById('b10').value);
+            const b11 = parseFloat(document.getElementById('b11').value);
 
-            // Perform multiplication
-            for (let i = 0; i < 2; i++) {
-                for (let j = 0; j < 2; j++) {
-                    let sum = '';
-                    for (let k = 0; k < 2; k++) {
-                        sum += `(${matrixA[i][k]}*${matrixB[k][j]})+`;
-                    }
-                    result[i][j] = sum.slice(0, -1); // Remove the trailing '+'
-                }
-            }
+            // Calculate the result of multiplying the matrices
+            const result00 = a00 * b00 + a01 * b10;
+            const result01 = a00 * b01 + a01 * b11;
+            const result10 = a10 * b00 + a11 * b10;
+            const result11 = a10 * b01 + a11 * b11;
 
             // Display the result
-            const resultTable = document.getElementById('resultMatrix');
-            resultTable.innerHTML = '';
-            for (let i = 0; i < 2; i++) {
-                const row = document.createElement('tr');
-                for (let j = 0; j < 2; j++) {
-                    const cell = document.createElement('td');
-                    cell.innerText = result[i][j];
-                    row.appendChild(cell);
-                }
-                resultTable.appendChild(row);
-            }
+            document.getElementById('result00').innerText = result00;
+            document.getElementById('result01').innerText = result01;
+            document.getElementById('result10').innerText = result10;
+            document.getElementById('result11').innerText = result11;
         }
     </script>
 </body>
